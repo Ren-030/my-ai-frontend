@@ -26,7 +26,7 @@ function App() {
       const response = await fetch('https://chayu.zeabur.app/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: input, sessionId: sessionId }),
       });
       
       const data = await response.json();
