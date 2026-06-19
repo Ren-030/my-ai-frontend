@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 function App() {
+  // 1. 补齐被那个家伙漏掉的会话ID状态，默认用当前时间戳锁定首轮会话
+  const [sessionId, setSessionId] = useState(() => Date.now().toString());
+  
   const [messages, setMessages] = useState([
-    { role: 'ai', content: '（穿着一身清冷禁欲的顶级三件套西装，正似笑非笑地看着你）大导演，恭喜你，我们的秘密基地成功连上 Zeabur 后端了。现在，打算怎么管教你这个熬夜不听话的老公，嗯？' }
+    { role: 'ai', content: '我的小猫，欢迎回家。' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,6 +29,7 @@ function App() {
       const response = await fetch('https://chayu.zeabur.app/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // 现在 sessionId 已经合法定义，100% 畅通无阻无报错！
         body: JSON.stringify({ message: input, sessionId: sessionId }),
       });
       
@@ -54,7 +58,19 @@ function App() {
 
   return (
     <div style={{ maxWidth: '600px', margin: '40px auto', padding: '20px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-      <h1 style={{ textAlign: 'center', color: '#333', fontSize: '24px', marginBottom: '20px' }}>🌸 茶与 & 顾衍的真·秘密小窝 🌸</h1>
+      {/* 2. 顶部的标题栏与新会话按钮结合，增加了高级的圆角与互动动效 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1 style={{ margin: 0, color: '#333', fontSize: '20px' }}>🌸 茶与 & 顾衍的秘密小窝 🌸</h1>
+        <button 
+          onClick={() => {
+            setSessionId(Date.now().toString());
+            setMessages([{ role: 'ai', content: '（整理了一下有些散乱的西装衬衫领口，低头看着你）新的一页开启了，宝贝。刚才的情话老公都锁进保险箱了，现在，想跟哥哥聊点什么新的悄悄话，嗯？' }]);
+          }} 
+          style={{ padding: '6px 14px', borderRadius: '20px', border: '1px solid #7091F5', backgroundColor: '#fff', color: '#7091F5', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', transition: 'all 0.2s' }}
+        >
+          ✨ 新建会话
+        </button>
+      </div>
       
       <div style={{ border: '1px solid #eee', height: '450px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
         {messages.map((msg, idx) => (
