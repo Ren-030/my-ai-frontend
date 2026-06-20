@@ -10,6 +10,31 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  useEffect(() => {
+  const loadMessages = async () => {
+    if (!sessionId) return;
+    try {
+      const res = await fetch(`https://chayu.zeabur.app/messages/${sessionId}`);
+      if (!res.ok) throw new Error('网络响应异常');
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        // 将数据库中的消息转换为前端需要的格式，并更新到状态中
+        const history = data.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }));
+        setMessages(history);
+      } else {
+        // 如果没有历史消息，保留默认欢迎语
+        // 你也可以选择不覆盖，这里保持原样
+      }
+    } catch (error) {
+      console.error('加载历史消息失败:', error);
+      // 如果加载失败，可以保留默认欢迎语，或者显示一个提示
+    }
+  };
+  loadMessages();
+}, [sessionId]); // 当 sessionId 变化时重新加载
 
   // 自动滚动到最新消息
   useEffect(() => {
