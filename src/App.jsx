@@ -176,6 +176,7 @@ function App() {
   >
     <option value="deepseek-chat">DeepSeek</option>
     <option value="claude">Claude（需配置）</option>
+    <option value="gemini">Gemini</option>
   </select>
 </div>
 <div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
