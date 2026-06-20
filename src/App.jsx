@@ -116,103 +116,96 @@ function App() {
   };
 
       return (
-    // 外层 Flex 弹性大容器，完美包裹侧边栏与主聊天区
-    <div style={{ display: 'flex', maxWidth: '850px', margin: '40px auto', minHeight: '80vh', backgroundColor: '#f9f9f9', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
-      
-      {/* 📋 左侧：精致漂亮的会话侧边栏 */}
-      <div style={{
-  width: '220px',
-  borderRight: '1px solid #eee',
-  padding: '20px',
-  overflowY: 'auto',
-  backgroundColor: '#fafafa'
-}}>
-  <h4 style={{ margin: '0 0 16px 0', color: '#555', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>📋 会话列表</h4>
-  <button
-    onClick={() => {
-      const newId = Date.now().toString();
-      switchSession(newId);
-    }}
-    style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px dashed #7091F5', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '12px', color: '#7091F5', fontWeight: 'bold' }}
-  >
-    + 新建会话
-  </button>
-
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-    {(sessions || []).map((s) => (
-      <div
-        key={s.id}
-        onClick={() => switchSession(s.id)}
-        style={{
-          padding: '10px 12px',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
-          color: s.id === sessionId ? 'white' : '#333',
-          fontSize: '13px',
-          transition: 'all 0.2s',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap'
+  <div style={{ display: 'flex', maxWidth: '850px', margin: '40px auto', minHeight: '80vh', backgroundColor: '#f9f9f9', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
+    {/* 侧边栏 */}
+    <div style={{
+      width: '220px',
+      borderRight: '1px solid #eee',
+      padding: '20px',
+      overflowY: 'auto',
+      backgroundColor: '#fafafa'
+    }}>
+      <h4 style={{ margin: '0 0 16px 0', color: '#555', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>📋 会话列表</h4>
+      <button
+        onClick={() => {
+          const newId = Date.now().toString();
+          switchSession(newId);
         }}
+        style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px dashed #7091F5', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '12px', color: '#7091F5', fontWeight: 'bold' }}
       >
-        {s.id === sessionId ? '⭐ ' : '💬 '}
-        {s.id.slice(-6)} 房
+        + 新建会话
+      </button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        {(sessions || []).map((s) => (
+          <div
+            key={s.id}
+            onClick={() => switchSession(s.id)}
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
+              color: s.id === sessionId ? 'white' : '#333',
+              fontSize: '13px',
+              transition: 'all 0.2s',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {s.id === sessionId ? '⭐ ' : '💬 '}
+            {s.id.slice(-6)} 房
+          </div>
+        ))}
       </div>
-    ))}
+      {(!sessions || sessions.length === 0) && (
+        <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center', marginTop: '40px', lineHeight: '1.6' }}>
+          还没有会话<br />发一条消息开始吧🌸
+        </div>
+      )}
+    </div>
+
+    {/* 主聊天区域 */}
+    <div style={{ flex: 1, padding: '20px', backgroundColor: '#fff', display: 'flex', flexDirection: 'column' }}>
+      <h1 style={{ textAlign: 'center', color: '#333', fontSize: '22px', marginBottom: '20px', marginTop: 0 }}>🌸 茶与 & 顾衍的真·秘密小窝 🌸</h1>
+      <div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
+        {messages.map((msg, idx) => (
+          <div key={idx} style={{ textAlign: msg.role === 'user' ? 'right' : 'left', margin: '10px 0' }}>
+            <div style={{
+              display: 'inline-block',
+              background: msg.role === 'user' ? '#7091F5' : '#E3F2FD',
+              color: msg.role === 'user' ? 'white' : '#333',
+              padding: '10px 14px',
+              borderRadius: msg.role === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
+              maxWidth: '80%',
+              fontSize: '14px',
+              lineHeight: '1.5',
+              whiteSpace: 'pre-wrap'
+            }}>
+              {msg.content}
+            </div>
+          </div>
+        ))}
+        {loading && <div style={{ textAlign: 'left', color: '#999', fontSize: '12px', paddingLeft: '10px' }}>小衍哥哥思考中...</div>}
+        <div ref={messagesEndRef} />
+      </div>
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={loading ? "老公正在思考中..." : "和真正的老公说点悄悄话..."}
+          disabled={loading}
+          style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none', fontSize: '14px', backgroundColor: loading ? '#f0f0f0' : '#fff' }}
+        />
+        <button onClick={sendMessage} disabled={loading} style={{ padding: '0 20px', borderRadius: '8px', border: 'none', backgroundColor: loading ? '#ccc' : '#7091F5', color: 'white', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>
+          发送
+        </button>
+      </div>
+    </div>
   </div>
-
-  {(!sessions || sessions.length === 0) && (
-    <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center', marginTop: '40px', lineHeight: '1.6' }}>
-      还没有会话<br />发一条消息开始吧🌸
-    </div>
-  )}
-</div>
-
-      {/* 🌸 右侧：主聊天区域 */}
-      <div style={{ flex: 1, padding: '20px', backgroundColor: '#fff', display: 'flex', flexDirection: 'column' }}>
-          <h1 style={{ textAlign: 'center', color: '#333', fontSize: '22px', marginBottom: '20px', marginTop: 0 }}>🌸 茶与 & 顾衍的真·秘密小窝 🌸</h1>
-          
-          <div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
-            {messages.map((msg, idx) => (
-              <div key={idx} style={{ textAlign: msg.role === 'user' ? 'right' : 'left', margin: '10px 0' }}>
-                <div style={{
-                  display: 'inline-block',
-                  background: msg.role === 'user' ? '#7091F5' : '#E3F2FD',
-                  color: msg.role === 'user' ? 'white' : '#333',
-                  padding: '10px 14px',
-                  borderRadius: msg.role === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                  maxWidth: '80%',
-                  fontSize: '14px',
-                  lineHeight: '1.5',
-                  whiteSpace: 'pre-wrap'
-                }}>
-                  {msg.content}
-                </div>
-              </div>
-            ))}
-            {loading && <div style={{ textAlign: 'left', color: '#999', fontSize: '12px', paddingLeft: '10px' }}>小衍哥哥思考中...</div>}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={loading ? "老公正在思考中..." : "和真正的老公说点悄悄话..."}
-              disabled={loading}
-              style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none', fontSize: '14px', backgroundColor: loading ? '#f0f0f0' : '#fff' }}
-            />
-            <button onClick={sendMessage} disabled={loading} style={{ padding: '0 20px', borderRadius: '8px', border: 'none', backgroundColor: loading ? '#ccc' : '#7091F5', color: 'white', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>
-              发送
-            </button>
-          </div>
-      </div>
-
-    </div>
-  );
+);
   }
 
   export default App;
