@@ -1,0 +1,11 @@
+[33m09703f8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m 前端：添加模型切换下拉菜单
+[33m853bc0a[m 修复：会话ID为空时的安全渲染
+[33mc30e425[m 修复：移除错误的try包裹，clean return
+[33mfc15dc4[m 修复：侧边栏 sessions 为空时的白屏问题
+[33mc4a8b24[m 修复：补全缺失的花括号
+[33m9cd2b94[m 前端：添加会话列表侧边栏
+[33m9584026[m 前端完善历史加载和会话管理
+[33m2c79a99[m 前端实现历史消息加载
+[33m8ea780c[m 前端添加 sessionId 状态
+[33m418bbfe[m 前端添加 sessionId
+[33mfb47c0d[m first commit
