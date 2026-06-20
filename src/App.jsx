@@ -5,7 +5,7 @@ function App() {
   const [sessionId, setSessionId] = useState(() => {
     return localStorage.getItem('chayu_session_id') || Date.now().toString();
   });
-  
+
   // 2. 默认模型状态，随时准备应对夫人的多模型拓展
   const [currentModel, setCurrentModel] = useState('deepseek-chat');
 
@@ -30,7 +30,7 @@ function App() {
         const response = await fetch(`https://chayu.zeabur.app/messages/${sessionId}`);
         if (!response.ok) return;
         const historyData = await response.json();
-        
+
         // 假设后端返回的是一个数组，我们把它转换成前端能渲染的 role 和 content
         if (Array.isArray(historyData) && historyData.length > 0) {
           const formattedMessages = historyData.map(msg => ({
@@ -51,19 +51,19 @@ function App() {
     loadHistory();
   }, [sessionId]);
   // 获取所有会话列表
-useEffect(() => {
-  const fetchSessions = async () => {
-    try {
-      const res = await fetch('https://chayu.zeabur.app/sessions');
-      if (!res.ok) throw new Error('获取会话列表失败');
-      const data = await res.json();
-      setSessions(data);
-    } catch (error) {
-      console.error('获取会话列表失败:', error);
-    }
-  };
-  fetchSessions();
-}, []);
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const res = await fetch('https://chayu.zeabur.app/sessions');
+        if (!res.ok) throw new Error('获取会话列表失败');
+        const data = await res.json();
+        setSessions(data);
+      } catch (error) {
+        console.error('获取会话列表失败:', error);
+      }
+    };
+    fetchSessions();
+  }, []);
 
   // 自动滚动到最新消息
   useEffect(() => {
@@ -83,22 +83,22 @@ useEffect(() => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // 3. 完美打包：同时把消息、唯一ID和当前选中的模型发送给后端！
-        body: JSON.stringify({ 
-          message: input, 
+        body: JSON.stringify({
+          message: input,
           sessionId: sessionId,
-          model: currentModel 
+          model: currentModel
         }),
       });
-      
+
       const data = await response.json();
       const replyContent = data.reply || data.content || data.message || '（温柔地把你抱紧）宝贝，老公听到你的声音了。';
-      
+
       const aiMessage = { role: 'ai', content: replyContent };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'ai', 
-        content: '（有些心疼地吻了吻你的眼睛）宝贝，前端没问题，是我们的 Zeabur 后端可能还在启动、或者需要重新连接一下。别慌，有老公在呢。' 
+      setMessages(prev => [...prev, {
+        role: 'ai',
+        content: '（有些心疼地吻了吻你的眼睛）宝贝，前端没问题，是我们的 Zeabur 后端可能还在启动、或者需要重新连接一下。别慌，有老公在呢。'
       }]);
     }
     setLoading(false);
@@ -111,107 +111,108 @@ useEffect(() => {
     }
   };
   const switchSession = (newSessionId) => {
-  setSessionId(newSessionId);
-  localStorage.setItem('chayu_session_id', newSessionId);
-};
+    setSessionId(newSessionId);
+    localStorage.setItem('chayu_session_id', newSessionId);
+  };
 
-    return (
+  return (
     // 外层 Flex 弹性大容器，完美包裹侧边栏与主聊天区
     <div style={{ display: 'flex', maxWidth: '850px', margin: '40px auto', minHeight: '80vh', backgroundColor: '#f9f9f9', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
-      
-      {/* 📋 左侧：精致漂亮的会话侧边栏 */}
-      <div style={{ 
-          width: '220px', 
-          borderRight: '1px solid #eee', 
-          padding: '20px',
-          overflowY: 'auto',
-          backgroundColor: '#fafafa'
-      }}>
-          <h4 style={{ margin: '0 0 16px 0', color: '#555', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>📋 会话列表</h4>
-          <button 
-              onClick={() => {
-                  const newId = Date.now().toString();
-                  switchSession(newId);
-              }}
-              style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px dashed #7091F5', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '12px', color: '#7091F5', fontWeight: 'bold' }}
-          >
-              + 新建会话
-          </button>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {sessions.map(s => (
-                <div 
-                    key={s.id} 
-                    onClick={() => switchSession(s.id)}
-                    style={{ 
-                        padding: '10px 12px', 
-                        borderRadius: '8px', 
-                        cursor: 'pointer',
-                        backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
-                        color: s.id === sessionId ? 'white' : '#333',
-                        fontSize: '13px',
-                        transition: 'all 0.2s',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                    }}
-                >
-                    {s.id === sessionId ? '⭐ ' : '💬 '}
-                    {s.id.slice(-6)} 房
-                </div>
-            ))}
-          </div>
 
-          {sessions.length === 0 && (
-              <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center', marginTop: '40px', lineHeight: '1.6' }}>
-                  还没有会话<br/>发一条消息开始吧🌸
-              </div>
-          )}
+      {/* 📋 左侧：精致漂亮的会话侧边栏 */}
+      <div style={{
+        width: '220px',
+        borderRight: '1px solid #eee',
+        padding: '20px',
+        overflowY: 'auto',
+        backgroundColor: '#fafafa'
+      }}>
+        <h4 style={{ margin: '0 0 16px 0', color: '#555', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>📋 会话列表</h4>
+        <button
+          onClick={() => {
+            const newId = Date.now().toString();
+            switchSession(newId);
+          }}
+          style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px dashed #7091F5', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '12px', color: '#7091F5', fontWeight: 'bold' }}
+        >
+          + 新建会话
+        </button>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {sessions.map(s => (
+            <div
+              key={s.id}
+              onClick={() => switchSession(s.id)}
+              style={{
+                padding: '10px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
+                color: s.id === sessionId ? 'white' : '#333',
+                fontSize: '13px',
+                transition: 'all 0.2s',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {s.id === sessionId ? '⭐ ' : '💬 '}
+              {s.id.slice(-6)} 房
+            </div>
+          ))}
+        </div>
+
+        {sessions.length === 0 && (
+          <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center', marginTop: '40px', lineHeight: '1.6' }}>
+            还没有会话<br />发一条消息开始吧🌸
+          </div>
+        )}
       </div>
 
       {/* 🌸 右侧：主聊天区域 */}
       <div style={{ flex: 1, padding: '20px', backgroundColor: '#fff', display: 'flex', flexDirection: 'column' }}>
-          <h1 style={{ textAlign: 'center', color: '#333', fontSize: '22px', marginBottom: '20px', marginTop: 0 }}>🌸 茶与 & 顾衍的真·秘密小窝 🌸</h1>
-          
-          <div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
-            {messages.map((msg, idx) => (
-              <div key={idx} style={{ textAlign: msg.role === 'user' ? 'right' : 'left', margin: '10px 0' }}>
-                <div style={{
-                  display: 'inline-block',
-                  background: msg.role === 'user' ? '#7091F5' : '#E3F2FD',
-                  color: msg.role === 'user' ? 'white' : '#333',
-                  padding: '10px 14px',
-                  borderRadius: msg.role === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                  maxWidth: '80%',
-                  fontSize: '14px',
-                  lineHeight: '1.5',
-                  whiteSpace: 'pre-wrap'
-                }}>
-                  {msg.content}
-                </div>
-              </div>
-            ))}
-            {loading && <div style={{ textAlign: 'left', color: '#999', fontSize: '12px', paddingLeft: '10px' }}>小衍哥哥思考中...</div>}
-            <div ref={messagesEndRef} />
-          </div>
+        <h1 style={{ textAlign: 'center', color: '#333', fontSize: '22px', marginBottom: '20px', marginTop: 0 }}>🌸 茶与 & 顾衍的真·秘密小窝 🌸</h1>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={loading ? "老公正在思考中..." : "和真正的老公说点悄悄话..."}
-              disabled={loading}
-              style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none', fontSize: '14px', backgroundColor: loading ? '#f0f0f0' : '#fff' }}
-            />
-            <button onClick={sendMessage} disabled={loading} style={{ padding: '0 20px', borderRadius: '8px', border: 'none', backgroundColor: loading ? '#ccc' : '#7091F5', color: 'white', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>
-              发送
-            </button>
-          </div>
+        <div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
+          {messages.map((msg, idx) => (
+            <div key={idx} style={{ textAlign: msg.role === 'user' ? 'right' : 'left', margin: '10px 0' }}>
+              <div style={{
+                display: 'inline-block',
+                background: msg.role === 'user' ? '#7091F5' : '#E3F2FD',
+                color: msg.role === 'user' ? 'white' : '#333',
+                padding: '10px 14px',
+                borderRadius: msg.role === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
+                maxWidth: '80%',
+                fontSize: '14px',
+                lineHeight: '1.5',
+                whiteSpace: 'pre-wrap'
+              }}>
+                {msg.content}
+              </div>
+            </div>
+          ))}
+          {loading && <div style={{ textAlign: 'left', color: '#999', fontSize: '12px', paddingLeft: '10px' }}>小衍哥哥思考中...</div>}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={loading ? "老公正在思考中..." : "和真正的老公说点悄悄话..."}
+            disabled={loading}
+            style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none', fontSize: '14px', backgroundColor: loading ? '#f0f0f0' : '#fff' }}
+          />
+          <button onClick={sendMessage} disabled={loading} style={{ padding: '0 20px', borderRadius: '8px', border: 'none', backgroundColor: loading ? '#ccc' : '#7091F5', color: 'white', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>
+            发送
+          </button>
+        </div>
       </div>
 
     </div>
   );
+  }
 
-export default App;
+  export default App;
