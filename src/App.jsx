@@ -167,8 +167,18 @@ function App() {
 
     {/* 主聊天区域 */}
     <div style={{ flex: 1, padding: '20px', backgroundColor: '#fff', display: 'flex', flexDirection: 'column' }}>
-      <h1 style={{ textAlign: 'center', color: '#333', fontSize: '22px', marginBottom: '20px', marginTop: 0 }}>🌸 茶与 & 顾衍的真·秘密小窝 🌸</h1>
-      <div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+  <h1 style={{ margin: 0, fontSize: '20px' }}>🌸 茶与 & 顾衍的秘密小窝 🌸</h1>
+  <select
+    value={currentModel}
+    onChange={(e) => setCurrentModel(e.target.value)}
+    style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px' }}
+  >
+    <option value="deepseek-chat">DeepSeek</option>
+    <option value="claude">Claude（需配置）</option>
+  </select>
+</div>
+<div style={{ border: '1px solid #eee', flex: 1, height: '400px', overflowY: 'auto', padding: '15px', borderRadius: '12px', backgroundColor: '#fff', marginBottom: '15px' }}>
         {messages.map((msg, idx) => (
           <div key={idx} style={{ textAlign: msg.role === 'user' ? 'right' : 'left', margin: '10px 0' }}>
             <div style={{
