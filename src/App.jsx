@@ -137,26 +137,26 @@ function App() {
       </button>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {(sessions || []).map((s) => (
-          <div
-            key={s.id}
-            onClick={() => switchSession(s.id)}
-            style={{
-              padding: '10px 12px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
-              color: s.id === sessionId ? 'white' : '#333',
-              fontSize: '13px',
-              transition: 'all 0.2s',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            {s.id === sessionId ? '⭐ ' : '💬 '}
-            {s.id.slice(-6)} 房
-          </div>
-        ))}
+  <div
+    key={s.id || Math.random().toString()}
+    onClick={() => s.id && switchSession(s.id)}
+    style={{
+      padding: '10px 12px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
+      color: s.id === sessionId ? 'white' : '#333',
+      fontSize: '13px',
+      transition: 'all 0.2s',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }}
+  >
+    {s.id === sessionId ? '⭐ ' : '💬 '}
+    {s.id ? s.id.slice(-6) : '新会话'} 房
+  </div>
+))}
       </div>
       {(!sessions || sessions.length === 0) && (
         <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center', marginTop: '40px', lineHeight: '1.6' }}>
