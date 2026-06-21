@@ -132,6 +132,37 @@ useEffect(() => {
       sendMessage();
     }
   };
+  
+  // 重命名会话
+  const renameSession = async (sessionId, newName) => {
+    try {
+        await fetch(`https://chayu.zeabur.app/sessions/${sessionId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_name: newName }),
+        });
+        await fetchSessions();
+    } catch (error) {
+        console.error('重命名失败:', error);
+        alert('重命名失败，请稍后重试');
+    }
+};
+
+// 删除会话
+  const deleteSession = async (sessionId) => {
+    try {
+        await fetch(`https://chayu.zeabur.app/sessions/${sessionId}`, {
+            method: 'DELETE',
+        });
+        if (sessionId === sessionId) {
+            setMessages([]);
+        }
+        await fetchSessions();
+    } catch (error) {
+        console.error('删除失败:', error);
+        alert('删除失败，请稍后重试');
+    }
+};
   const switchSession = (newSessionId) => {
     setSessionId(newSessionId);
     localStorage.setItem('chayu_session_id', newSessionId);
@@ -174,26 +205,55 @@ useEffect(() => {
           </button>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {(sessions || []).map((s) => (
-              <div
-                key={s.id || Math.random().toString()}
-                onClick={() => s.id && switchSession(s.id)}
-                style={{
-                  padding: '10px 12px',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
-                  color: s.id === sessionId ? 'white' : '#333',
-                  fontSize: '13px',
-                  transition: 'all 0.2s',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+    <div
+        key={s.id || Math.random().toString()}
+        style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '6px 8px',
+            borderRadius: '8px',
+            cursor: 'default',
+            backgroundColor: s.id === sessionId ? '#7091F5' : 'transparent',
+            color: s.id === sessionId ? 'white' : '#333',
+            fontSize: '13px',
+            transition: 'all 0.2s',
+        }}
+    >
+        <span
+            onClick={() => switchSession(s.id)}
+            style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}
+        >
+            {s.id === sessionId ? '⭐ ' : '💬 '}
+            {s.session_name || s.id.slice(-6) + ' 房'}
+        </span>
+        <div style={{ display: 'flex', gap: '4px' }}>
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    const newName = prompt('输入新的会话名称：', s.session_name || '');
+                    if (newName !== null && newName.trim() !== '') {
+                        renameSession(s.id, newName.trim());
+                    }
                 }}
-              >
-                {s.id === sessionId ? '⭐ ' : ' '}
-                {s.id ? s.id.slice(-6) : '新会话'} 房
-              </div>
-            ))}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: s.id === sessionId ? '#fff' : '#888' }}
+            >
+                ✏️
+            </button>
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    if (confirm(`确定要删除这个会话吗？`)) {
+                        deleteSession(s.id);
+                    }
+                }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: s.id === sessionId ? '#fff' : '#888' }}
+            >
+                🗑️
+            </button>
+        </div>
+    </div>
+))}
           </div>
           {(!sessions || sessions.length === 0) && (
             <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center', marginTop: '40px', lineHeight: '1.6' }}>
