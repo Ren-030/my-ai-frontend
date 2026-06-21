@@ -53,7 +53,6 @@ function App() {
     loadHistory();
   }, [sessionId]);
   // 获取所有会话列表
-  useEffect(() => {
     const fetchSessions = async () => {
       try {
         const res = await fetch('https://chayu.zeabur.app/sessions');
@@ -64,6 +63,7 @@ function App() {
         console.error('获取会话列表失败:', error);
       }
     };
+    useEffect(() => {
     fetchSessions();
   }, []);
 
