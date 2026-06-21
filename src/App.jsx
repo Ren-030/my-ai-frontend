@@ -132,7 +132,13 @@ useEffect(() => {
       sendMessage();
     }
   };
-  
+
+  const switchSession = (newSessionId) => {
+    setSessionId(newSessionId);
+    localStorage.setItem('chayu_session_id', newSessionId);
+    fetchSessions(); // 手动刷新会话列表
+  };
+    
   // 重命名会话
   const renameSession = async (sessionId, newName) => {
     try {
@@ -163,11 +169,7 @@ useEffect(() => {
         alert('删除失败，请稍后重试');
     }
 };
-  const switchSession = (newSessionId) => {
-    setSessionId(newSessionId);
-    localStorage.setItem('chayu_session_id', newSessionId);
-    fetchSessions(); // 手动刷新会话列表
-  };
+
   const saveSettings = async () => {
     try {
         await fetch('https://chayu.zeabur.app/settings', {
