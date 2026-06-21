@@ -142,11 +142,19 @@ useEffect(() => {
   // 重命名会话
   const renameSession = async (sessionId, newName) => {
     try {
+        // 1. 先更新本地状态（立即生效）
+        setSessions(prev => prev.map(s => 
+            s.id === sessionId ? { ...s, session_name: newName } : s
+        ));
+
+        // 2. 再调用后端接口（持久化）
         await fetch(`https://chayu.zeabur.app/sessions/${sessionId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ session_name: newName }),
         });
+
+        // 3. 最后再从服务器拉取一次，确保一致（可选）
         await fetchSessions();
     } catch (error) {
         console.error('重命名失败:', error);
