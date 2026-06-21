@@ -231,28 +231,23 @@ useEffect(() => {
         </span>
         <div style={{ display: 'flex', gap: '4px' }}>
             <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    const newName = prompt('输入新的会话名称：', s.session_name || '');
-                    if (newName !== null && newName.trim() !== '') {
-                        renameSession(s.id, newName.trim());
-                    }
-                }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: s.id === sessionId ? '#fff' : '#888' }}
-            >
-                ✏️
-            </button>
-            <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    if (confirm(`确定要删除这个会话吗？`)) {
-                        deleteSession(s.id);
-                    }
-                }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: s.id === sessionId ? '#fff' : '#888' }}
-            >
-                🗑️
-            </button>
+    onClick={(e) => {
+        e.stopPropagation();
+        alert('重命名功能测试');
+    }}
+    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: s.id === sessionId ? '#fff' : '#888' }}
+>
+    ✏️
+</button>
+<button
+    onClick={(e) => {
+        e.stopPropagation();
+        alert('删除功能测试');
+    }}
+    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: s.id === sessionId ? '#fff' : '#888' }}
+>
+    🗑️
+</button>
         </div>
     </div>
 ))}
