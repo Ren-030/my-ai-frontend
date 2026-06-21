@@ -54,11 +54,12 @@ function App() {
   }, [sessionId]);
   // 获取所有会话列表
     const fetchSessions = async () => {
+      console.log('🔄 正在刷新会话列表...'); // 新增这一行
       try {
         const res = await fetch('https://chayu.zeabur.app/sessions');
         if (!res.ok) throw new Error('获取会话列表失败');
         const data = await res.json();
-        setSessions(data);
+        setSessions([...data]); // 用扩展运算符创建新数组，强制触发重新渲染
       } catch (error) {
         console.error('获取会话列表失败:', error);
       }
