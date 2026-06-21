@@ -116,6 +116,7 @@ useEffect(() => {
 
       const aiMessage = { role: 'ai', content: replyContent };
       setMessages(prev => [...prev, aiMessage]);
+      await fetchSessions();
     } catch (error) {
       setMessages(prev => [...prev, {
         role: 'ai',
