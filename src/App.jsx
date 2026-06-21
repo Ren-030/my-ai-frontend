@@ -103,7 +103,10 @@ useEffect(() => {
         body: JSON.stringify({
           message: input,
           sessionId: sessionId,
-          model: currentModel
+          model: currentModel,
+          system_prompt: settings.system_prompt,
+          temperature: settings.temperature,
+          max_tokens: settings.max_tokens  // 新增这一行
         }),
       });
 
@@ -130,6 +133,7 @@ useEffect(() => {
   const switchSession = (newSessionId) => {
     setSessionId(newSessionId);
     localStorage.setItem('chayu_session_id', newSessionId);
+    fetchSessions(); // 手动刷新会话列表
   };
   const saveSettings = async () => {
     try {
