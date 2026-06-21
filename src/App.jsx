@@ -227,7 +227,7 @@ useEffect(() => {
             style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}
         >
             {s.id === sessionId ? '⭐ ' : '💬 '}
-            {s.session_name || s.id.slice(-6) + ' 房'}
+            {s.session_name || (s.id ? s.id.slice(-6) : '新') + ' 房'}
         </span>
         <div style={{ display: 'flex', gap: '4px' }}>
             <button
