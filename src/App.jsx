@@ -383,6 +383,7 @@ useEffect(() => {
                 style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd' }}
               />
             </div>
+            {/* Max Tokens 输入框 */}
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>Max Tokens (回复长度)</label>
               <input
@@ -394,6 +395,43 @@ useEffect(() => {
                 style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd' }}
               />
             </div>
+            {/* 添加长期记忆的功能  */}
+            <div style={{ marginBottom: '20px' }}>
+    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>长期记忆（AI 会记住这些信息）</label>
+    <div style={{ display: 'flex', gap: '8px' }}>
+        <input
+            type="text"
+            id="memoryInput"
+            placeholder="输入一条重要的信息，比如「我喜欢喝红茶」"
+            style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #ddd' }}
+        />
+        <button
+            onClick={async () => {
+                const input = document.getElementById('memoryInput');
+                if (!input || !input.value.trim()) return;
+                try {
+                    await fetch('https://chayu.zeabur.app/memories', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: input.value.trim() }),
+                    });
+                    input.value = '';
+                    alert('记忆已保存！');
+                } catch (error) {
+                    alert('保存记忆失败');
+                }
+            }}
+            style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: '#7091F5', color: '#fff', cursor: 'pointer' }}
+        >
+            添加
+        </button>
+    </div>
+    <div style={{ marginTop: '8px', fontSize: '12px', color: '#888' }}>
+        添加后，AI 会在所有会话中记住这些信息。
+    </div>
+</div>
+
+            {/* 设置弹窗的按钮区域（取消/保存） */}
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setShowSettings(false)}
