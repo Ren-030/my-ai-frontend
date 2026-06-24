@@ -413,8 +413,11 @@ useEffect(() => {
                     await fetch('https://chayu.zeabur.app/memories', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ content: input.value.trim() }),
-                    });
+                        body: JSON.stringify({
+                        content: input.value.trim(),
+                        keywords: []  // 可以先传空数组，让后端自动生成
+                   }),
+                });
                     input.value = '';
                     alert('记忆已保存！');
                 } catch (error) {
